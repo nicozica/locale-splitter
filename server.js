@@ -41,46 +41,104 @@ function renderPage({ errorMessage = "" } = {}) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Locale Splitter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
         color-scheme: light;
-        font-family: "Segoe UI", sans-serif;
-        background: #f5f1e8;
-        color: #1d1b18;
+        --gray-100: #f6f6f6;
+        --gray-300: #b8b7b9;
+        --gray-500: #767279;
+        --gray-800: #29232c;
+        --indigo-50: #f8f9ff;
+        --indigo-500: #2f469c;
+        --indigo-700: #112572;
+        --purple-200: #da98ed;
+        --purple-500: #84329b;
+        --red-100: #ffe4ea;
+        --red-600: #b51a3f;
+        --orange-100: #fff4e6;
+        --orange-500: #d3681b;
       }
       body {
         margin: 0;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        color: var(--gray-800);
         background:
-          radial-gradient(circle at top left, rgba(198, 133, 58, 0.22), transparent 30%),
-          linear-gradient(135deg, #f7f2ea, #efe4d0);
+          radial-gradient(1100px circle at 0% 0%, rgba(218, 152, 237, 0.4), transparent 46%),
+          radial-gradient(850px circle at 100% 100%, rgba(47, 70, 156, 0.26), transparent 44%),
+          linear-gradient(135deg, var(--indigo-50), #ffffff 45%, var(--gray-100));
       }
       main {
-        width: min(92vw, 640px);
-        padding: 2rem;
-        border-radius: 20px;
-        background: rgba(255, 251, 245, 0.94);
-        box-shadow: 0 18px 50px rgba(72, 54, 33, 0.12);
+        width: min(94vw, 720px);
+        padding: clamp(1.4rem, 1.5vw + 1rem, 2.4rem);
+        border-radius: 24px;
+        border: 1px solid rgba(17, 37, 114, 0.16);
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow:
+          0 24px 48px rgba(8, 25, 88, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(6px);
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.85rem;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid rgba(17, 37, 114, 0.2);
+        background: linear-gradient(90deg, rgba(47, 70, 156, 0.08), rgba(132, 50, 155, 0.12));
+        color: var(--indigo-700);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--orange-500), var(--purple-500));
       }
       h1 {
-        margin-top: 0;
-        font-size: clamp(2rem, 4vw, 2.6rem);
+        margin: 0 0 0.75rem;
+        font-size: clamp(1.9rem, 3vw + 1rem, 3rem);
+        line-height: 1.1;
+        color: var(--indigo-700);
       }
       p {
-        line-height: 1.5;
+        margin: 0;
+        line-height: 1.6;
+      }
+      .lede {
+        color: #3a343d;
       }
       form {
         display: grid;
-        gap: 1rem;
-        margin-top: 1.5rem;
+        gap: 0.95rem;
+        margin-top: 1.25rem;
+      }
+      .upload-row {
+        display: grid;
+        gap: 0.35rem;
+      }
+      label {
+        font-size: 0.88rem;
+        color: var(--gray-500);
+        font-weight: 600;
       }
       input[type="file"] {
-        padding: 0.9rem;
-        border: 1px dashed #9a7a52;
-        border-radius: 12px;
-        background: #fff;
+        padding: 1rem;
+        border: 1px dashed rgba(47, 70, 156, 0.45);
+        border-radius: 14px;
+        background: linear-gradient(180deg, #ffffff, #f8f9ff);
       }
       button,
       a.button {
@@ -88,40 +146,70 @@ function renderPage({ errorMessage = "" } = {}) {
         justify-content: center;
         align-items: center;
         width: fit-content;
-        padding: 0.85rem 1.1rem;
-        border: 0;
+        padding: 0.82rem 1.2rem;
+        border: 1px solid rgba(17, 37, 114, 0.16);
         border-radius: 999px;
-        background: #8f4b17;
+        background: linear-gradient(120deg, var(--indigo-500), var(--purple-500));
         color: #fff;
-        font-weight: 700;
+        font-weight: 800;
+        letter-spacing: 0.01em;
         text-decoration: none;
         cursor: pointer;
+        transition: transform 150ms ease, box-shadow 150ms ease;
+      }
+      button:hover,
+      a.button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 16px rgba(17, 37, 114, 0.24);
       }
       .error {
-        margin-bottom: 1rem;
+        margin-top: 1rem;
         padding: 0.85rem 1rem;
-        border-left: 4px solid #a22619;
-        border-radius: 10px;
-        background: #fde8e5;
-        color: #7d1a10;
+        border: 1px solid rgba(181, 26, 63, 0.28);
+        border-left: 4px solid var(--red-600);
+        border-radius: 12px;
+        background: var(--red-100);
+        color: #71051e;
+        font-weight: 600;
       }
       .hint {
         margin-top: 1rem;
-        font-size: 0.95rem;
-        color: #5f564a;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(211, 104, 27, 0.22);
+        background: var(--orange-100);
+        color: #683215;
+        font-size: 0.93rem;
+      }
+      code {
+        padding: 0.12rem 0.35rem;
+        border-radius: 6px;
+        background: rgba(47, 70, 156, 0.1);
+        color: var(--indigo-700);
+      }
+      .copyright {
+        margin-top: 1.3rem;
+        font-size: 0.82rem;
+        color: var(--gray-500);
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <main>
+      <div class="brand"><span class="dot"></span>Ipsos iSay Tooling</div>
       <h1>Locale Splitter</h1>
-      <p>Upload one <code>.txt</code> file containing concatenated HTML blocks. The app finds marker lines, creates one HTML file per block, and streams everything back as a ZIP.</p>
+      <p class="lede">Upload one <code>.txt</code> file containing concatenated HTML blocks. The app finds marker lines, creates one HTML file per block, and streams everything back as a ZIP.</p>
       ${errorHtml}
       <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="sourceFile" accept=".txt,text/plain" required>
+        <div class="upload-row">
+          <label for="sourceFile">Translation source file</label>
+          <input id="sourceFile" type="file" name="sourceFile" accept=".txt,text/plain" required>
+        </div>
         <button type="submit">Upload and Download ZIP</button>
       </form>
       <p class="hint">Marker format: <code>|- (EN-US) faq-contact-us</code>. Any text before the first marker is ignored.</p>
+      <p class="copyright">Copyright 2026 Ipsos UX Team</p>
     </main>
   </body>
 </html>`;
@@ -134,34 +222,83 @@ function renderErrorPage(message) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Locale Splitter Error</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --gray-100: #f6f6f6;
+        --gray-500: #767279;
+        --gray-800: #29232c;
+        --indigo-50: #f8f9ff;
+        --indigo-700: #112572;
+        --purple-200: #da98ed;
+        --red-100: #ffe4ea;
+        --red-600: #b51a3f;
+      }
       body {
         margin: 0;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: #f8f1f0;
-        color: #271816;
-        font-family: "Segoe UI", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        color: var(--gray-800);
+        background:
+          radial-gradient(980px circle at 0% 0%, rgba(218, 152, 237, 0.34), transparent 46%),
+          radial-gradient(820px circle at 100% 100%, rgba(47, 70, 156, 0.2), transparent 44%),
+          linear-gradient(135deg, var(--indigo-50), #ffffff 40%, var(--gray-100));
       }
       main {
-        width: min(92vw, 560px);
-        padding: 2rem;
-        border-radius: 18px;
-        background: #fffaf9;
-        box-shadow: 0 18px 45px rgba(96, 45, 36, 0.12);
+        width: min(94vw, 620px);
+        padding: clamp(1.4rem, 1.5vw + 1rem, 2.2rem);
+        border-radius: 22px;
+        border: 1px solid rgba(17, 37, 114, 0.16);
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow:
+          0 24px 48px rgba(8, 25, 88, 0.16),
+          inset 0 1px 0 rgba(255, 255, 255, 0.82);
+      }
+      h1 {
+        margin: 0 0 0.75rem;
+        color: var(--indigo-700);
+      }
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+      .message {
+        margin-top: 1rem;
+        padding: 0.85rem 1rem;
+        border: 1px solid rgba(181, 26, 63, 0.25);
+        border-left: 4px solid var(--red-600);
+        border-radius: 12px;
+        background: var(--red-100);
+        color: #71051e;
+        font-weight: 600;
       }
       a {
-        color: #9d2b1f;
+        color: var(--indigo-700);
         font-weight: 700;
+      }
+      .actions {
+        margin-top: 1rem;
+      }
+      .copyright {
+        margin-top: 1.3rem;
+        font-size: 0.82rem;
+        color: var(--gray-500);
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <main>
       <h1>Unable to create ZIP</h1>
-      <p>${escapeHtml(message)}</p>
-      <p><a href="/">Back to upload</a></p>
+      <p class="message">${escapeHtml(message)}</p>
+      <p class="actions"><a href="/">Back to upload</a></p>
+      <p class="copyright">Copyright 2026 Ipsos UX Team</p>
     </main>
   </body>
 </html>`;
