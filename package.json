@@ -1,0 +1,27 @@
+{
+  "name": "locale-splitter",
+  "version": "1.0.0",
+  "description": "MVP web app to split concatenated localized HTML blocks into a ZIP archive.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node scripts/test-split.js"
+  },
+  "keywords": [
+    "express",
+    "zip",
+    "html",
+    "locales"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "express": "^5.2.1",
+    "multer": "^2.1.0"
+  }
+}

@@ -1,0 +1,24 @@
+Header text before the first marker should be ignored.
+This line is also ignored.
+
+|- (EN-US) faq-common-concerns
+<section>
+  <h1>Common concerns</h1>
+  <p>English content with UTF-8 accents: café.</p>
+</section>
+|- (KO-KR) faq-common-concerns
+<section>
+  <h1>자주 묻는 질문</h1>
+  <p>한국어 HTML 예시입니다.</p>
+</section>
+|- (AR-SA) faq-contact-us.html
+<section dir="rtl">
+  <h1>اتصل بنا</h1>
+  <p>مثال على محتوى عربي.</p>
+</section>
+|- (EN-PH) faq-empty-block
+|- (EN-GB) faq about us...
+<section>
+  <h1>About us</h1>
+  <p>Spaces and dots in the slug become a safe filename.</p>
+</section>
