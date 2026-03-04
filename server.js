@@ -12,6 +12,8 @@ const upload = multer({
 });
 
 const ALLOWED_MIME_TYPES = new Set(["text/plain", "application/octet-stream"]);
+const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="32" height="64" fill="#2f469c"/><rect x="32" width="32" height="64" fill="#287d5f"/></svg>`;
+const FAVICON_DATA_URI = `data:image/svg+xml,${encodeURIComponent(FAVICON_SVG)}`;
 
 function validateUploadedTextFile(file) {
   if (!file) {
@@ -41,6 +43,7 @@ function renderPage({ errorMessage = "" } = {}) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Locale Splitter</title>
+    <link rel="icon" type="image/svg+xml" href="${FAVICON_DATA_URI}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -86,27 +89,6 @@ function renderPage({ errorMessage = "" } = {}) {
           inset 0 1px 0 rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(6px);
       }
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.85rem;
-        padding: 0.45rem 0.8rem;
-        border-radius: 999px;
-        border: 1px solid rgba(17, 37, 114, 0.2);
-        background: linear-gradient(90deg, rgba(47, 70, 156, 0.08), rgba(132, 50, 155, 0.12));
-        color: var(--indigo-700);
-        font-size: 0.82rem;
-        font-weight: 700;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-      }
-      .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: linear-gradient(135deg, var(--orange-500), var(--purple-500));
-      }
       h1 {
         margin: 0 0 0.75rem;
         font-size: clamp(1.9rem, 3vw + 1rem, 3rem);
@@ -149,7 +131,7 @@ function renderPage({ errorMessage = "" } = {}) {
         padding: 0.82rem 1.2rem;
         border: 1px solid rgba(17, 37, 114, 0.16);
         border-radius: 999px;
-        background: linear-gradient(120deg, var(--indigo-500), var(--purple-500));
+        background: #2f469c;
         color: #fff;
         font-weight: 800;
         letter-spacing: 0.01em;
@@ -160,6 +142,7 @@ function renderPage({ errorMessage = "" } = {}) {
       button:hover,
       a.button:hover {
         transform: translateY(-1px);
+        background: #1d3590;
         box-shadow: 0 10px 16px rgba(17, 37, 114, 0.24);
       }
       .error {
@@ -197,7 +180,6 @@ function renderPage({ errorMessage = "" } = {}) {
   </head>
   <body>
     <main>
-      <div class="brand"><span class="dot"></span>Ipsos iSay Tooling</div>
       <h1>Locale Splitter</h1>
       <p class="lede">Upload one <code>.txt</code> file containing concatenated HTML blocks. The app finds marker lines, creates one HTML file per block, and streams everything back as a ZIP.</p>
       ${errorHtml}
@@ -222,6 +204,7 @@ function renderErrorPage(message) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Locale Splitter Error</title>
+    <link rel="icon" type="image/svg+xml" href="${FAVICON_DATA_URI}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
