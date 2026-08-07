@@ -4,6 +4,13 @@ const archiver = require("archiver");
 const { parseLocalizedHtml, sanitizeSlug } = require("./src/parser");
 
 const app = express();
+
+const configuredBasePath = process.env.BASE_PATH || "";
+const BASE_PATH =
+  configuredBasePath && configuredBasePath !== "/" && configuredBasePath.endsWith("/")
+    ? configuredBasePath.slice(0, -1)
+    : configuredBasePath;
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -183,7 +190,7 @@ function renderPage({ errorMessage = "" } = {}) {
       <h1>Locale Splitter</h1>
       <p class="lede">Upload one <code>.txt</code> file containing concatenated HTML blocks. The app finds marker lines, creates one HTML file per block, and streams everything back as a ZIP.</p>
       ${errorHtml}
-      <form action="/upload" method="post" enctype="multipart/form-data">
+      <form action="upload" method="post" enctype="multipart/form-data">
         <div class="upload-row">
           <label for="sourceFile">Translation source file</label>
           <input id="sourceFile" type="file" name="sourceFile" accept=".txt,text/plain" required>
@@ -280,7 +287,7 @@ function renderErrorPage(message) {
     <main>
       <h1>Unable to create ZIP</h1>
       <p class="message">${escapeHtml(message)}</p>
-      <p class="actions"><a href="/">Back to upload</a></p>
+      <p class="actions"><a href="./">Back to upload</a></p>
       <p class="copyright">Copyright 2026 Ipsos UX Team</p>
     </main>
   </body>
@@ -296,11 +303,11 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-app.get("/", (_req, res) => {
+app.get(["/", `${BASE_PATH}/`], (_req, res) => {
   res.type("html").send(renderPage());
 });
 
-app.post("/upload", upload.single("sourceFile"), async (req, res) => {
+app.post(["/upload", `${BASE_PATH}/upload`], upload.single("sourceFile"), async (req, res) => {
   const validationError = validateUploadedTextFile(req.file);
   if (validationError) {
     res.status(400).type("html").send(renderPage({ errorMessage: validationError }));
