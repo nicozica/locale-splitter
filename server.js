@@ -117,17 +117,46 @@ function renderPage({ errorMessage = "" } = {}) {
       .upload-row {
         display: grid;
         gap: 0.35rem;
+        min-width: 0;
       }
       label {
         font-size: 0.88rem;
         color: var(--gray-500);
         font-weight: 600;
       }
-      input[type="file"] {
+      .drop-zone {
+        position: relative;
+        min-width: 0;
         padding: 1rem;
         border: 1px dashed rgba(47, 70, 156, 0.45);
         border-radius: 14px;
         background: linear-gradient(180deg, #ffffff, #f8f9ff);
+      }
+      .drop-zone.is-dragging {
+        border-color: var(--indigo-500);
+        background: #eef1ff;
+      }
+      .drop-zone:focus-within {
+        outline: 2px solid var(--indigo-500);
+        outline-offset: 3px;
+      }
+      .drop-zone:has([aria-invalid="true"]) {
+        border-color: var(--red-600);
+      }
+      .drop-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .file-status {
+        overflow-wrap: anywhere;
+      }
+      .file-error {
+        color: var(--red-600);
+        font-size: 0.88rem;
       }
       button,
       a.button {
@@ -193,13 +222,88 @@ function renderPage({ errorMessage = "" } = {}) {
       <form action="upload" method="post" enctype="multipart/form-data">
         <div class="upload-row">
           <label for="sourceFile">Translation source file</label>
-          <input id="sourceFile" type="file" name="sourceFile" accept=".txt,text/plain" required>
+          <div class="drop-zone" id="dropZone">
+            <input id="sourceFile" type="file" name="sourceFile" accept=".txt" aria-describedby="fileStatus fileError" required>
+            <p class="file-status" id="fileStatus" role="status">Drop a .txt file here or click to choose.</p>
+          </div>
+          <p class="file-error" id="fileError" role="alert" hidden></p>
         </div>
         <button type="submit">Upload and Download ZIP</button>
       </form>
       <p class="hint">Marker format: <code>|- (EN-US) faq-contact-us</code>. Any text before the first marker is ignored.</p>
       <p class="copyright">Copyright 2026 Ipsos UX Team</p>
     </main>
+    <script>
+      const dropZone = document.getElementById("dropZone");
+      const fileInput = document.getElementById("sourceFile");
+      const fileStatus = document.getElementById("fileStatus");
+      const fileError = document.getElementById("fileError");
+      const defaultStatus = fileStatus.textContent;
+      let dragDepth = 0;
+
+      function resetDragState() {
+        dragDepth = 0;
+        dropZone.classList.remove("is-dragging");
+      }
+
+      function updateSelection(files) {
+        const file = files[0];
+        let error = "";
+        if (files.length > 1) {
+          error = "Please choose only one .txt file.";
+        } else if (file && !file.name.toLowerCase().endsWith(".txt")) {
+          error = "Invalid file type. Please choose a .txt file.";
+        }
+
+        fileInput.setCustomValidity(error);
+        fileInput.setAttribute("aria-invalid", String(Boolean(error)));
+        fileError.textContent = error;
+        fileError.hidden = !error;
+        fileStatus.textContent = error || !file ? defaultStatus : file.name;
+        if (error) {
+          fileInput.value = "";
+        }
+        return !error;
+      }
+
+      fileInput.addEventListener("change", () => {
+        updateSelection(fileInput.files);
+      });
+
+      dropZone.addEventListener("dragenter", (event) => {
+        if (!Array.from(event.dataTransfer.types).includes("Files")) return;
+        event.preventDefault();
+        dragDepth += 1;
+        dropZone.classList.add("is-dragging");
+      });
+
+      dropZone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dragDepth = Math.max(0, dragDepth - 1);
+        if (dragDepth === 0) resetDragState();
+      });
+
+      dropZone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        resetDragState();
+        const files = event.dataTransfer.files;
+        if (files.length && updateSelection(files)) {
+          fileInput.files = files;
+        }
+      });
+
+      document.addEventListener("dragover", (event) => event.preventDefault());
+      document.addEventListener("drop", (event) => {
+        event.preventDefault();
+        resetDragState();
+      });
+      document.addEventListener("dragend", resetDragState);
+      window.addEventListener("blur", resetDragState);
+    </script>
   </body>
 </html>`;
 }
