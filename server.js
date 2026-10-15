@@ -231,7 +231,7 @@ function renderPage({ errorMessage = "" } = {}) {
         <button type="submit">Upload and Download ZIP</button>
       </form>
       <p class="hint">Marker format: <code>|- (EN-US) faq-contact-us</code>. Any text before the first marker is ignored.</p>
-      <p class="copyright">Copyright 2026 Ipsos UX Team</p>
+      <p class="copyright">Copyright 2026 IIS Design team</p>
     </main>
     <script>
       const dropZone = document.getElementById("dropZone");
@@ -392,7 +392,7 @@ function renderErrorPage(message) {
       <h1>Unable to create ZIP</h1>
       <p class="message">${escapeHtml(message)}</p>
       <p class="actions"><a href="./">Back to upload</a></p>
-      <p class="copyright">Copyright 2026 Ipsos UX Team</p>
+      <p class="copyright">Copyright 2026 IIS Design team</p>
     </main>
   </body>
 </html>`;
